@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Rock, Paper, Scissors!</title>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200;0,300;0,400;0,600;0,700;0,800;0,900;1,200;1,300;1,400;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+    <style>
+      body {
+        font-family: sans-serif;
+        padding: 0;
+        margin: auto;
+      }
+
+      h1 {
+        font-size: 50px;
+        color: #797a7e;
+        font-family: 'Nunito', sans-serif;
+        text-align: center;
+        margin: 0;
+        position: absolute;
+        left: 50%;
+        top: 45%;
+        transition: 1.5s ease-out;
+        transform: translate(-50%, -45%);
+      }
+    </style>
+  </head>
+  <body>
+    <h1></h1>
+    <script type="text/javascript">
+      const choices = ['Rock', 'Paper', 'Scissors'];
+      const bgColours = ['#9ad3bc', '#b2deec', '#f5b461'];
+      let title = document.querySelector('h1');
+      let bg = document.querySelector('body');
+
+      function intro(i) {
+        setTimeout(function() {
+          title.innerHTML += choices[i] + '! ';
+          bg.style.backgroundColor = bgColours[i];
+          if (i < 2) {
+            intro(i + 1);
+          } else {
+            setTimeout(function() {
+              title.style.top = '50px';
+              bg.style.backgroundColor = '#f3eac2';
+            }, 500);
+          }
+        }, 500);
+      }
+      document.addEventListener("DOMContentLoaded", intro(0));
+    </script>
+  </body>
+</html>
