@@ -9,29 +9,182 @@
         font-family: sans-serif;
         padding: 0;
         margin: auto;
+        transition: background-color 0.5s, top 1.5s ease-out;
+        width: 800px;
+        text-align: center;
+        position: absolute;
+        left: 50%;
+        top: 45%;
+        transform: translate(-50%, -12.5%);
       }
 
       h1 {
         font-size: 50px;
+        margin: 0;
+      }
+
+      h2 {
+        font-size: 30px;
+        opacity: 0;
+        transition: 0.5s;
+      }
+
+      h3 {
+        font-size: 25px;
+      }
+
+      h4 {
+        font-size: 20px;
+      }
+
+      h1,
+      h2,
+      h3,
+      h4,
+      h5,
+      h6 {
         color: #797a7e;
         font-family: 'Nunito', sans-serif;
-        text-align: center;
-        margin: 0;
-        position: absolute;
-        left: 50%;
-        top: 45%;
-        transition: 1.5s ease-out;
-        transform: translate(-50%, -45%);
+      }
+
+      button {
+        font-family: 'Nunito', sans-serif;
+        width: 25%;
+        margin: 0 3%;
+        height: 40px;
+        font-size: 20px;
+        border: 3px solid #797a7e;
+        border-radius: 3px;
+        color: #797a7e;
+        background-color: #f3eac2;
+        transition: 0.25s;
+      }
+
+      button:hover {
+        background-color: #797a7e;
+        color: #f3eac2;
+      }
+
+      button:active {
+        background-color: #606164;
+        border-color: #606164;
+      }
+
+      button:focus {
+        outline: 0;
+      }
+
+      .choice {
+        display: inline-block;
+        width: 40%;
+      }
+
+      #content {
+        opacity: 0;
+        transition: opacity 0.5s 1.6s;
+      }
+
+      #computer,
+      #result {
+        opacity: 0;
+        transition: 0.5s
+      }
+
+      .button-cursor:hover {
+        cursor: pointer;
       }
     </style>
   </head>
   <body>
-    <h1></h1>
+    <h1 id='title'></h1>
+    <div id='content'>
+      <div>
+        <h4>Make your choice below</h4>
+        <button>Rock</button>
+        <button>Paper</button>
+        <button>Scissors</button>
+      </div>
+      <div class='choice' id="playerDiv">
+        <h3>Player chooses:</h3>
+        <h2 id='player'>player choice</h2>
+      </div>
+      <div class='choice' id="computerDiv">
+        <h3>Computer chooses:</h3>
+        <h2 id='computer'>computer choice</h2>
+      </div>
+      <h2 id='result'>result</h2>
+    </div>
     <script type="text/javascript">
       const choices = ['Rock', 'Paper', 'Scissors'];
       const bgColours = ['#9ad3bc', '#b2deec', '#f5b461'];
-      let title = document.querySelector('h1');
+      let title = document.querySelector('#title');
       let bg = document.querySelector('body');
+      let content = document.querySelector('#content');
+      let computerTag = document.querySelector('#computer');
+      let resultTag = document.querySelector('#result');
+      let playerTag = document.querySelector('#player');
+      const buttons = document.querySelectorAll('button');
+
+      const computer = {
+        choice: null,
+      }
+      const player = {
+        choice: null,
+      }
+
+      function computerChooses() {
+        computerTag.style.opacity = '0%';
+        const randomIndex = Math.floor(Math.random() * choices.length);
+        computer.choice = choices[randomIndex];
+        computerTag.innerHTML = computer.choice;
+        computerTag.style.opacity = '100%';
+      }
+
+      function outputResult(result) {
+        resultTag.style.opacity = '0%';
+        resultTag.innerHTML = result;
+        resultTag.style.opacity = '100%';
+      }
+
+      function compareChoices() {
+        const playerWin = "Player wins!";
+        const compWin = "Computer wins!";
+        const draw = "Draw.";
+        if (computer.choice === player.choice) {
+          outputResult(draw);
+        } else {
+          for (let i = 0; i < choices.length; i++) {
+            if (computer.choice === choices[i]) {
+              const index = (i + 1) % 3;
+              if (player.choice === choices[index]) {
+                outputResult(playerWin);
+              } else {
+                outputResult(compWin);
+              }
+              break;
+            }
+          }
+        }
+      }
+
+      function hideOutput() {
+        playerTag.style.opacity = '0';
+        computerTag.style.opacity = '0';
+        resultTag.style.opacity = '0';
+      }
+
+      buttons.forEach(item => {
+        item.addEventListener('click', event => {
+          hideOutput();
+          setTimeout(function() {
+            player.choice = item.innerHTML;
+            playerTag.innerHTML = player.choice;
+            playerTag.style.opacity = '100%';
+            computerChooses();
+            compareChoices();
+          }, 500);
+        })
+      })
 
       function intro(i) {
         setTimeout(function() {
@@ -41,8 +194,14 @@
             intro(i + 1);
           } else {
             setTimeout(function() {
-              title.style.top = '50px';
+              bg.style.top = '20%';
               bg.style.backgroundColor = '#f3eac2';
+              content.style.opacity = '100%';
+              setTimeout(function() {
+                buttons.forEach((item, i) => {
+                  item.className += 'button-cursor';
+                });
+              }, 1500)
             }, 500);
           }
         }, 500);
