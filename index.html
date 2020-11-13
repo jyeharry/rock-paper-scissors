@@ -101,13 +101,9 @@
     </div>
     <script type="text/javascript">
       const choices = ['Rock', 'Paper', 'Scissors'];
-      const bgColours = ['#9ad3bc', '#b2deec', '#f5b461'];
-      let title = document.querySelector('#title');
-      let bg = document.querySelector('body');
-      let content = document.querySelector('#content');
-      let computerTag = document.querySelector('#computer');
-      let resultTag = document.querySelector('#result');
-      let playerTag = document.querySelector('#player');
+      const computerTag = document.querySelector('#computer');
+      const resultTag = document.querySelector('#result');
+      const playerTag = document.querySelector('#player');
       const buttons = document.querySelectorAll('button');
 
       const computer = {
@@ -118,7 +114,6 @@
       }
 
       function computerChooses() {
-        computerTag.style.opacity = '0%';
         const randomIndex = Math.floor(Math.random() * choices.length);
         computer.choice = choices[randomIndex];
         computerTag.innerHTML = computer.choice;
@@ -126,11 +121,11 @@
       }
 
       function outputResult(result) {
-        resultTag.style.opacity = '0%';
         resultTag.innerHTML = result;
         resultTag.style.opacity = '100%';
       }
-
+      
+      // compares player and computers choice to determine the outcome of the game
       function compareChoices() {
         const playerWin = "Player wins!";
         const compWin = "Computer wins!";
@@ -152,26 +147,12 @@
         }
       }
 
-      function hideOutput() {
-        playerTag.style.opacity = '0';
-        computerTag.style.opacity = '0';
-        resultTag.style.opacity = '0';
-      }
-
-      buttons.forEach(item => {
-        item.addEventListener('click', event => {
-          hideOutput();
-          setTimeout(function() {
-            player.choice = item.innerHTML;
-            playerTag.innerHTML = player.choice;
-            playerTag.style.opacity = '100%';
-            computerChooses();
-            compareChoices();
-          }, 500);
-        })
-      })
-
+      // called when page loads. starts by flashing the title then fading in the content
       function intro(i) {
+        const title = document.querySelector('#title');
+        const bg = document.querySelector('body');
+        const content = document.querySelector('#content');
+        const bgColours = ['#9ad3bc', '#b2deec', '#f5b461'];
         setTimeout(function() {
           title.innerHTML += choices[i] + '! ';
           bg.style.backgroundColor = bgColours[i];
@@ -183,14 +164,39 @@
               bg.style.backgroundColor = '#f3eac2';
               content.style.opacity = '100%';
               setTimeout(function() {
-                buttons.forEach((item, i) => {
-                  item.className += 'button-cursor';
+                buttons.forEach(btn => {
+                  btn.className += 'button-cursor';
                 });
               }, 1500)
             }, 500);
           }
         }, 500);
       }
+
+      function hideOutput() {
+        playerTag.style.opacity = '0';
+        computerTag.style.opacity = '0';
+        resultTag.style.opacity = '0';
+      }
+
+      function playerChooses(btn) {
+        player.choice = btn.innerHTML;
+        playerTag.innerHTML = player.choice;
+        playerTag.style.opacity = '100%';
+      }
+
+      // add event listener to each button that will set the players choice,
+      // computers choice and then output the result
+      buttons.forEach(btn => {
+        btn.addEventListener('click', event => {
+          hideOutput();
+          setTimeout(function() {
+            playerChooses(btn)
+            computerChooses();
+            compareChoices();
+          }, 500);
+        })
+      })
       document.addEventListener("DOMContentLoaded", intro(0));
     </script>
   </body>
